@@ -26,7 +26,7 @@ def import_ninja_ripdump(filename, object_name):
     l = f.readline()
     print(l)
     if 'RIPDUMP 1.1' not in l:
-        print('Bad file!')
+        print('Expected first line to contain "RIPDUMP 1.1", got', l, 'instead.')
         return
 
     vert_pattern = re.compile('([0-9]{6}):.* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+)$')
@@ -72,7 +72,8 @@ def import_ninja_ripdump(filename, object_name):
 
 
 if __name__ == "__main__":
-    dir = "E:/Program Files (x86)/Guild Wars 2/_Ripper/frames/frame00/"
+    #dir = "E:/Program Files (x86)/Guild Wars 2/_Ripper/frames/frame00/"
+    dir = '/home/chris/work/blender-ninjaripper-importer/'
     files_list = os.listdir(dir)
     for file in files_list:
         filestr = str(file)
