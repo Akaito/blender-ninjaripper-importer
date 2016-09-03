@@ -3,12 +3,14 @@ bl_info = {
     "author": "Chris Barrett",
     "version": (2, 0, 1),
     "blender": (2, 74, 0),
-    "location": "File > Import > Ninja Ripper RipDump or Add > Mesh > Ninja Ripper RipDump",
+    "location": "File > Import > Ninja Ripper RipDump",
     "description": "Imports one directory's frameNNN.mesh.txt RIPDUMP 1.1 contents. "
                    "One object is created per .mesh.txt.",
     "warning": "",
     "category": "Import-Export",
 }
+
+# Using blender/scripts/addons/io_import_images_as_planes.py for reference.
 
 
 import bpy
@@ -97,3 +99,27 @@ if __name__ == "__main__":
             )
             print('Imported ' + str(file))
     print('Import done')
+
+
+#==============================================================================
+# Register plugin with Blender
+#==============================================================================
+
+def import_ripdump_button():
+    self.layout.operator(
+        IMPORT_OT_image_to_plane.bl_idname,
+        text="Images as Planes",
+        icon='TEXTURE'
+    )
+
+def register():
+    #bpy.utils.register_module(__name__)
+    #bpy.types.INFO_MT_file_import.append(import_ripdump_button)
+    print('reg 2')
+
+def unregister():
+    print('unreg')
+
+if __name__ == '__main__':
+    register()
+
