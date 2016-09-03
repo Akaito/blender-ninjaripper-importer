@@ -1,5 +1,6 @@
 bl_info = {
     "name": "Import Ninja Ripper/Dx Ripper RIPDUMP",
+    "category": "Import-Export",
     "author": "Chris Barrett",
     "version": (2, 0, 1),
     "blender": (2, 74, 0),
@@ -7,7 +8,6 @@ bl_info = {
     "description": "Imports one directory's frameNNN.mesh.txt RIPDUMP 1.1 contents. "
                    "One object is created per .mesh.txt.",
     "warning": "",
-    "category": "Import-Export",
 }
 
 # Using blender/scripts/addons/io_import_images_as_planes.py for reference.
@@ -16,6 +16,14 @@ bl_info = {
 import bpy
 #import mathutils
 #from mathutils import Vector
+
+from bpy.props import (StringProperty,
+                       BoolProperty,
+                       EnumProperty,
+                       IntProperty,
+                       FloatProperty,
+                       CollectionProperty,
+                       )
 
 import re
 import glob
@@ -102,23 +110,39 @@ if __name__ == "__main__":
 
 
 #==============================================================================
+# Blender Operator class
+#==============================================================================
+
+class IMPORT_OT_ripdump(bpy.types.Operator):
+    """Create objects from Nina Ripper / DX Ripper ripdumps on disk"""
+    bl_idname = 'import.ripdump'
+    bl_label = 'Import Ripdumps as Objects'
+    bl_options = {'REGISTER', 'UNDO'}
+
+    # -----------
+    # File props.
+    files = CollectionProperty(type=bpy.types.OperatorFileListElement, options={'HIDDEN', 'SKIP_SAVE'})
+
+    directory = StringProperty(maxlen=1024, subtype='FILE_PATH', options={'HIDDEN', 'SKIP_SAVE'})
+
+
+#==============================================================================
 # Register plugin with Blender
 #==============================================================================
 
-def import_ripdump_button():
-    self.layout.operator(
-        IMPORT_OT_image_to_plane.bl_idname,
-        text="Images as Planes",
-        icon='TEXTURE'
-    )
+def import_ripdump_button(self, context):
+    self.layout.operator(IMPORT_OT_ripdump.bl_idname,
+                         text="Ninja/DX Ripdump")
 
 def register():
-    #bpy.utils.register_module(__name__)
-    #bpy.types.INFO_MT_file_import.append(import_ripdump_button)
     print('reg 2')
+    bpy.utils.register_module(__name__)
+    bpy.types.INFO_MT_file_import.append(import_ripdump_button)
 
 def unregister():
     print('unreg')
+    bpy.utils.unregister_module(__name__)
+    bpy.types.INFO_MT_file_import.remove(import_ripdump_button)
 
 if __name__ == '__main__':
     register()
