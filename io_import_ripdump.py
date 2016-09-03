@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
 class IMPORT_OT_ripdump(bpy.types.Operator):
     """Create objects from Nina Ripper / DX Ripper ripdumps on disk"""
-    bl_idname = 'import.ripdump'
+    bl_idname = 'import.ninja_ripdump'
     bl_label = 'Import Ripdumps as Objects'
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -124,6 +124,14 @@ class IMPORT_OT_ripdump(bpy.types.Operator):
     files = CollectionProperty(type=bpy.types.OperatorFileListElement, options={'HIDDEN', 'SKIP_SAVE'})
 
     directory = StringProperty(maxlen=1024, subtype='FILE_PATH', options={'HIDDEN', 'SKIP_SAVE'})
+
+    def invoke(self, context, event):
+        print('invoke')
+        return {'FINISHED'}
+
+    def execute(self, context):
+        print('execute')
+        return {'FINISHED'}
 
 
 #==============================================================================
