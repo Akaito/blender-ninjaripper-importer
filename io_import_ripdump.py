@@ -17,14 +17,6 @@ import bpy
 #import mathutils
 #from mathutils import Vector
 
-from bpy.props import (StringProperty,
-                       BoolProperty,
-                       EnumProperty,
-                       IntProperty,
-                       FloatProperty,
-                       CollectionProperty,
-                       )
-
 import re
 import glob
 import os
@@ -120,17 +112,23 @@ class IMPORT_OT_ripdump(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     # -----------
-    # File props.
-    files = CollectionProperty(type=bpy.types.OperatorFileListElement, options={'HIDDEN', 'SKIP_SAVE'})
+    # Properties assigned by the file selection window.
+    #filepath = None
+    #filename = None
+    directory = bpy.props.StringProperty(maxlen=1024, subtype='FILE_PATH', options={'HIDDEN', 'SKIP_SAVE'})
+    files = bpy.props.CollectionProperty(type=bpy.types.OperatorFileListElement, options={'HIDDEN', 'SKIP_SAVE'})
 
-    directory = StringProperty(maxlen=1024, subtype='FILE_PATH', options={'HIDDEN', 'SKIP_SAVE'})
-
+    # invoke is called when the user picks our Import menu entry.
     def invoke(self, context, event):
         print('invoke')
-        return {'FINISHED'}
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
 
+    # execute is called when the user is done using the modal file-select window.
     def execute(self, context):
         print('execute')
+        print('directory', self.directory)
+        print('files', self.files)
         return {'FINISHED'}
 
 
