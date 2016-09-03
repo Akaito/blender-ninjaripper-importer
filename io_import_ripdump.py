@@ -22,18 +22,19 @@ import glob
 import os
 
 
-def create_new_object(vert_coords, edges, faces, object_name='RippedMesh'):
-    # Create, position, and link new model/mesh
-    me = bpy.data.meshes.new(object_name)
-    ob = bpy.data.objects.new(object_name, me)
-    ob.location = bpy.context.scene.cursor_location
-    bpy.context.scene.objects.link(ob)
-    bpy.context.scene.objects.active = ob
-    ob.select = True
+def create_new_object(vert_coords, faces, object_name='RippedMesh'):
+    edges = []
 
-    # Fill mesh with verts, edges, faces
-    #me.from_pydata(vert_coords, edges, faces)
-    #me.update(calc_edges=True)
+    mesh = bpy.data.meshes.new(name=object_name)
+    mesh.from_pydata(vert_coords, edges, faces)
+    #mesh.validate(verbose=True)
+    mesh.update(calc_edges=True)
+
+    obj = bpy.data.objects.new(object_name, mesh)
+    obj.location = bpy.context.scene.cursor_location
+    bpy.context.scene.objects.link(obj)
+    bpy.context.scene.objects.active = obj
+    obj.select = True
 
 
 def import_ninja_ripdump(filename, object_name):
@@ -47,8 +48,8 @@ def import_ninja_ripdump(filename, object_name):
     face_pattern = re.compile('([0-9]{6}):.* (\d+) (\d+) (\d+)$')
 
     vert_coords = []
-    vert_norms = []
-    vert_tex_coords = []
+    #vert_norms = []
+    #vert_tex_coords = []
     faces = []
 
     for l in f.readlines():
@@ -60,28 +61,32 @@ def import_ninja_ripdump(filename, object_name):
                 float(m.group(3)),
                 float(m.group(4))
             ))
+            '''
             vert_norms.append((
                 float(m.group(5)),
                 float(m.group(6)),
                 float(m.group(7))
             ))
+            '''
+            '''
             vert_tex_coords.append((
                 float(m.group(8)),
                 float(m.group(9))
             ))
+            '''
             continue
         # Try to read face
         m = face_pattern.match(l)
         if m:
-            faces.append([
+            faces.append((
                 int(m.group(2)),
                 int(m.group(3)),
                 int(m.group(4))
-            ])
+            ))
             continue
     # end for each line in file
 
-    create_new_object(vert_coords, [], faces, object_name)
+    create_new_object(vert_coords, faces, object_name)
     return
 
 
@@ -115,7 +120,7 @@ class IMPORT_OT_ripdump(bpy.types.Operator):
             if filestr.startswith("mesh") and filestr.endswith(".rip.txt"):
                 import_ninja_ripdump(
                     filename=dir + filestr,
-                    object_name=filestr[4:-8]
+                    object_name='rip' + filestr[4:-8]
                 )
             else:
                 print('Ignored non-"meshNNNN.rip.txt" file', filestr)
