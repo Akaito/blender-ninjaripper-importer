@@ -37,7 +37,7 @@ def create_new_object(vert_coords, edges, faces, object_name='RippedMesh'):
 
 
 def import_ninja_ripdump(filename, object_name):
-    f = open(filename, mode='r')
+    f = open(filename, mode='rt')
     l = f.readline()
     print(l)
     if 'RIPDUMP 1.1' not in l:
@@ -46,6 +46,7 @@ def import_ninja_ripdump(filename, object_name):
 
     vert_pattern = re.compile('([0-9]{6}):.* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+)$')
     face_pattern = re.compile('([0-9]{6}):.* (\d+) (\d+) (\d+)$')
+    return
 
     vert_coords = []
     vert_norms = []
@@ -86,21 +87,6 @@ def import_ninja_ripdump(filename, object_name):
     return
 
 
-if __name__ == "__main__":
-    #dir = "E:/Program Files (x86)/Guild Wars 2/_Ripper/frames/frame00/"
-    dir = '/home/chris/work/blender-ninjaripper-importer/'
-    files_list = os.listdir(dir)
-    for file in files_list:
-        filestr = str(file)
-        if file.startswith("mesh") and file.endswith(".rip.txt"):
-            import_ninja_ripdump(
-                filename=dir + filestr,
-                object_name=filestr[4:-8]
-            )
-            print('Imported ' + str(file))
-    print('Import done')
-
-
 #==============================================================================
 # Blender Operator class
 #==============================================================================
@@ -127,8 +113,18 @@ class IMPORT_OT_ripdump(bpy.types.Operator):
     # execute is called when the user is done using the modal file-select window.
     def execute(self, context):
         print('execute')
-        print('directory', self.directory)
-        print('files', self.files)
+        dir = self.directory
+        for file in self.files:
+            filestr = str(file.name)
+            if filestr.startswith("mesh") and filestr.endswith(".rip.txt"):
+                import_ninja_ripdump(
+                    filename=dir + filestr,
+                    object_name=filestr[4:-8]
+                )
+                print('Imported', filestr)
+            else:
+                print('Ignored non-"meshNNNN.rip.txt" file', filestr)
+        print('Import done')
         return {'FINISHED'}
 
 
