@@ -32,21 +32,19 @@ def create_new_object(vert_coords, edges, faces, object_name='RippedMesh'):
     ob.select = True
 
     # Fill mesh with verts, edges, faces
-    me.from_pydata(vert_coords, edges, faces)
-    me.update(calc_edges=True)
+    #me.from_pydata(vert_coords, edges, faces)
+    #me.update(calc_edges=True)
 
 
 def import_ninja_ripdump(filename, object_name):
     f = open(filename, mode='rt')
     l = f.readline()
-    print(l)
     if 'RIPDUMP 1.1' not in l:
         print('Expected first line to contain "RIPDUMP 1.1", got', l, 'instead.')
         return
 
     vert_pattern = re.compile('([0-9]{6}):.* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+) .* ([-0-9.]+)$')
     face_pattern = re.compile('([0-9]{6}):.* (\d+) (\d+) (\d+)$')
-    return
 
     vert_coords = []
     vert_norms = []
@@ -106,13 +104,11 @@ class IMPORT_OT_ripdump(bpy.types.Operator):
 
     # invoke is called when the user picks our Import menu entry.
     def invoke(self, context, event):
-        print('invoke')
         context.window_manager.fileselect_add(self)
         return {'RUNNING_MODAL'}
 
     # execute is called when the user is done using the modal file-select window.
     def execute(self, context):
-        print('execute')
         dir = self.directory
         for file in self.files:
             filestr = str(file.name)
@@ -121,10 +117,8 @@ class IMPORT_OT_ripdump(bpy.types.Operator):
                     filename=dir + filestr,
                     object_name=filestr[4:-8]
                 )
-                print('Imported', filestr)
             else:
                 print('Ignored non-"meshNNNN.rip.txt" file', filestr)
-        print('Import done')
         return {'FINISHED'}
 
 
@@ -137,12 +131,10 @@ def import_ripdump_button(self, context):
                          text="Ninja/DX Ripdump")
 
 def register():
-    print('reg 2')
     bpy.utils.register_module(__name__)
     bpy.types.INFO_MT_file_import.append(import_ripdump_button)
 
 def unregister():
-    print('unreg')
     bpy.utils.unregister_module(__name__)
     bpy.types.INFO_MT_file_import.remove(import_ripdump_button)
 
