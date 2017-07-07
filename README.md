@@ -6,9 +6,10 @@ Import ninja ripper's (sometimes "dx ripper") output into Blender.
 
 ### How to Use (Once Installed)
 
-1. Go to File -> Import -> Ninja/DX Ripdump.
-2. Find Ninja Ripper's outputs.  Usually in a directory like "<game-dir>/_Ripper/frames/frame00/".
-3. Pick as many mesh0000.rip.txt files as you like.  Select all of them to make things easier.
+1. Get a plaintext "RIPDUMP 1.1" from Ninja Ripper (newer versions are currently not supported).
+2. Go to File -> Import -> Ninja/DX Ripdump.
+3. Find Ninja Ripper's outputs.  Usually in a directory like "<game-dir>/_Ripper/frames/frame00/".
+4. Pick as many mesh0000.rip.txt files as you like.  Select all of them to make things easier.
 
 
 ### How to Install as a Blender Addon
