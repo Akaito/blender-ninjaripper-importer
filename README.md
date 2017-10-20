@@ -1,7 +1,7 @@
 blender-ninjaripper-importer
 ============================
 
-Import ninja ripper's (sometimes "dx ripper") output into Blender.
+Import ninja ripper's (sometimes "dx ripper") v1.1 output into Blender.
 
 
 ### How to Use (Once Installed)
